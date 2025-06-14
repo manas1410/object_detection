@@ -8,7 +8,7 @@ from detect import detect_and_crop_by_keyword
 app = Flask(__name__)
 CORS(app)
 
-INPUT_FOLDER = "input_data"
+INPUT_FOLDER = "extension_data"
 os.makedirs(INPUT_FOLDER, exist_ok=True)
 
 def save_base64_image(base64_str, output_path):
@@ -41,6 +41,26 @@ def detect():
         all_crops.extend(crops)
 
     return jsonify({"status": "success", "matched_crops": all_crops})
+
+@app.route("/background", methods=["POST"])
+def detect():
+    data = request.get_json()
+    backGroundImage = data.get("Image")
+
+    if not backGroundImage:
+        return jsonify({"status": "error", "message": "Missing 'Image'"}), 400
+
+    unique_name = "BackGround.jpg"
+    image_path = os.path.join(INPUT_FOLDER, unique_name)
+    
+    try:
+        with open(image_path, "wb") as f:
+            f.write(image_data) 
+        return jsonify({"status": "success", "message": "Image saved successfully"})
+    except Exception as e:
+        print(f"Failed to save image: {e}")
+        return jsonify({"status": "error", "message": f"Failed to save image: {str(e)}"}), 500
+    
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
