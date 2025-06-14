@@ -47,6 +47,25 @@ def detect():
 
     return jsonify({"status": "success", "matched_crops": all_crops})
 
+@app.route("/object", methods=["POST"])
+def background():
+    data = request.get_json()
+    backGroundImage = data.get("Image")
+
+    if not backGroundImage:
+        return jsonify({"status": "error", "message": "Missing 'Image'"}), 400
+
+    unique_name = "Object.jpg"
+    image_path = os.path.join(INPUT_FOLDER, unique_name)
+    
+    try:
+        with open(image_path, "wb") as f:
+            f.write(image_data) 
+        return jsonify({"status": "success", "message": "Image saved successfully"})
+    except Exception as e:
+        print(f"Failed to save image: {e}")
+        return jsonify({"status": "error", "message": f"Failed to save image: {str(e)}"}), 500
+
 @app.route("/background", methods=["POST"])
 def background():
     data = request.get_json()
