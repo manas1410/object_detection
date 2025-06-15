@@ -115,7 +115,7 @@ def depthMap():
     generate_depth_map(objectImage, DEPTHMAP_FOLDER, 'Object.jpg')
     generate_mesh(backGroundImage, os.path.join(DEPTHMAP_FOLDER, 'Background.jpg'), os.join.path(PLY_FOLDER))
     generate_mesh(backGroundImage, os.path.join(DEPTHMAP_FOLDER), 'Object.jpg', os.join.path(PLY_FOLDER))
-    merge_ply_files(os.path.join(PLY_FOLDER, 'Background.ply'), os.path.join(PLY_FOLDER, 'Object.ply'), os.path.join(PLY_FOLDER, 'Merged.ply'))
+    merge_ply_files(os.path.join(PLY_FOLDER, 'Background.ply'), os.path.join(PLY_FOLDER, 'Object.ply'), os.path.join(PLY_FOLDER, 'merge_scene.ply'))
     return jsonify({"status": "success"})
 
 if __name__ == "__main__":

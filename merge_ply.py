@@ -146,9 +146,9 @@ def check_ply_data(ply_file):
 # check_ply_data("C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\WhatsApp Image 2025-06-15 at 12.49.25 AM.ply")
 
 
-merge_ply_files(
-    "C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\WhatsApp Image 2025-06-15 at 12.49.26 AM.ply",
-    "C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\WhatsApp Image 2025-06-15 at 12.49.25 AM.ply",
-    "C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\merged_scene.ply",
-    translation=(0, 0, 0)  
-)
+# merge_ply_files(
+#     "C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\WhatsApp Image 2025-06-15 at 12.49.26 AM.ply",
+#     "C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\WhatsApp Image 2025-06-15 at 12.49.25 AM.ply",
+#     "C:\\Users\\ASUS Zenbook A14\\Downloads\\output_ply\\test\\merged_scene.ply",
+#     translation=(0, 0, 0)  
+# )
