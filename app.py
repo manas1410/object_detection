@@ -3,7 +3,7 @@ import os
 import uuid
 import base64
 from flask_cors import CORS
-from detect import detect_and_crop_by_keyword
+from detect import detect_and_crop_by_keyword, detect_and_crop_highest_confidence
 from object_detection.depth import generate_depth_map
 from object_detection.merge_ply import merge_ply_files
 from object_detection.mesh import generate_mesh
@@ -55,15 +55,21 @@ def detect():
     if not keyword or not uploaded_files:
         return jsonify({"status": "error", "message": "Missing 'keyword' or 'images'"}), 400
 
-    all_crops = []
+    highest_confidence_crop = {}
     for uploaded_file in uploaded_files:
         unique_name = f"{uuid.uuid4()}.jpg"
         image_path = os.path.join(INPUT_FOLDER, unique_name)
         
         uploaded_file.save(image_path)  # Direct save
         
-        crops = detect_and_crop_by_keyword(image_path, keyword)
-        all_crops.extend(crops)
+        confidence_crop = detect_and_crop_highest_confidence(image_path, keyword)
+        if(len(highest_confidence_crop.keys()) == 0 ) :
+            highest_confidence_crop = confidence_crop
+        else :
+            if(confidence_crop['confidence'] > highest_confidence_crop['confidence']):
+                highest_confidence_crop = confidence_crop
+    
+    os.rename(highest_confidence_crop["crop_path"], os.path.join(INPUT_FOLDER, 'Object.jpg'))
 
     return jsonify({"status": "success", "matched_crops": all_crops})
 
