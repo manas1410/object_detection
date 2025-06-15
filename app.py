@@ -24,26 +24,46 @@ def save_base64_image(base64_str, output_path):
         print(f"Failed to decode base64 image: {e}")
         return False
 
+# @app.route("/detect", methods=["POST"])
+# def detect():
+#     data = request.get_json()
+#     keyword = data.get("Keyword")
+#     base64_images = data.get("Images")
+
+#     if not keyword or not base64_images:
+#         return jsonify({"status": "error", "message": "Missing 'keyword' or 'images'"}), 400
+
+#     all_crops = []
+#     for base64_img in base64_images:
+#         unique_name = f"{uuid.uuid4()}.jpg"
+#         image_path = os.path.join(INPUT_FOLDER, unique_name)
+
+#         if not save_base64_image(base64_img, image_path):
+#             continue  # skip failures
+
+#         crops = detect_and_crop_by_keyword(image_path, keyword)
+#         all_crops.extend(crops)
+#         # TODO : Check the best image out of all
+
+#     return jsonify({"status": "success", "matched_crops": all_crops})
+
 @app.route("/detect", methods=["POST"])
 def detect():
-    data = request.get_json()
-    keyword = data.get("Keyword")
-    base64_images = data.get("Images")
-
-    if not keyword or not base64_images:
+    keyword = request.form.get("Keyword")
+    uploaded_files = request.files.getlist("Images")
+    
+    if not keyword or not uploaded_files:
         return jsonify({"status": "error", "message": "Missing 'keyword' or 'images'"}), 400
 
     all_crops = []
-    for base64_img in base64_images:
+    for uploaded_file in uploaded_files:
         unique_name = f"{uuid.uuid4()}.jpg"
         image_path = os.path.join(INPUT_FOLDER, unique_name)
-
-        if not save_base64_image(base64_img, image_path):
-            continue  # skip failures
-
+        
+        uploaded_file.save(image_path)  # Direct save
+        
         crops = detect_and_crop_by_keyword(image_path, keyword)
         all_crops.extend(crops)
-        # TODO : Check the best image out of all
 
     return jsonify({"status": "success", "matched_crops": all_crops})
 
@@ -86,7 +106,7 @@ def background():
         return jsonify({"status": "error", "message": f"Failed to save image: {str(e)}"}), 500
     
 
-@app.route("/depthMap", methods=["GET"])
+@app.route("/get3d", methods=["GET"])
 def depthMap():
     backGroundImage = os.path.join(INPUT_FOLDER, 'Background.jpg')
     objectImage = os.path.join(INPUT_FOLDER, 'Object.jpg')
